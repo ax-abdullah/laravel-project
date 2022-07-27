@@ -6,13 +6,31 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+
 class PostsController extends Controller
 {
     //
-    public function index(Request $request){
-        $posts      = DB::table('posts')->where('id', $request->id)->get(['id', 'title', 'body']);
-        // $posts      = DB::table('posts')->where('created_at', '>', now()->subDay())->orWhere('title', 'Prof.')->get(['id', 'title', 'body']);
-        // dd($posts);
-        return response($posts,200);
+    public function index(){
+        $posts = DB::table('posts')->get(['id', 'title', 'body']);
+        // foreach($posts as $post){
+            //     dd($post);
+            // }
+            // $post = $post;
+            // dd($post);
+            $update = DB::table('posts')->where('id',10)->update([
+            'title'=> "updated",
+            'body'=> "updated",
+        ]);
+        // dd($post);
+            return response()->json($posts);
+        }
+    public function update(Request $request){
+        DB::table('posts')->where('id',$request->id)->update([
+            'title'=> $request->title,
+            'body'=> $request->body,
+            'updated_at'=> now()
+        ]);
+        $post= DB::table('posts')->where('id', $request->id)->get();
+        return response()->json($post);
     }
 }
